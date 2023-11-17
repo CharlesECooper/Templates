@@ -1,0 +1,679 @@
+{
+  "log": {
+    "disabled": false,
+    "level": "debug",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "cloudflare",
+        "address": "1.1.1.1",
+        "detour": "Auto"
+      },
+      {
+        "tag": "alibaba",
+        "address": "223.5.5.5",
+        "detour": "Auto"
+      },
+      {
+        "tag": "tencent",
+        "address": "119.29.29.20",
+        "detour": "Auto"
+      },
+      {
+        "tag": "local",
+        "address": "https://223.5.5.5/dns-query",
+        "detour": "DIRECT"
+      },
+      {
+        "tag": "block",
+        "address": "rcode://success"
+      },
+      {
+        "tag": "remote",
+        "address": "fakeip"
+      }
+    ],
+    "rules": [
+      {
+        "domain": [
+          "ghproxy.com",
+          "cdn.jsdelivr.net",
+          "testingcf.jsdelivr.net"
+        ],
+        "server": "local"
+      },
+      {
+        "geosite": "category-ads-all",
+        "server": "block"
+      },
+      {
+        "outbound": "any",
+        "server": "local",
+        "disable_cache": true
+      },
+      {
+        "geosite": "cn",
+        "server": "local"
+      },   
+      {
+        "clash_mode": "direct",
+        "server": "local"
+      },
+      {
+        "clash_mode": "global",
+        "server": "cloudflare"
+      },
+      {
+        "geosite": "geolocation-!cn",
+        "server": "cloudflare"
+      },
+      {
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
+        "server": "remote"
+      }
+    ],
+    "fakeip": {
+      "enabled": true,
+      "inet4_range": "198.18.0.0/15",
+      "inet6_range": "fc00::/18"
+    },
+    "final": "local",
+    "independent_cache": true,
+    "strategy": "prefer_ipv4"
+  },
+  "inbounds": [
+    {
+      "tag": "tun",
+      "type": "tun",
+      "inet4_address": "172.19.0.1/30",
+      "inet6_address": "fdfe:dcba:9876::1/126",
+      "mtu": 9000,
+      "stack": "system",
+      "auto_route": true,
+      "strict_route": true,
+      "sniff": true,
+      "endpoint_independent_nat": false,
+      "sniff_override_destination": true,
+      "domain_strategy": "prefer_ipv4",
+      "platform": {
+        "http_proxy": {
+          "enabled": true,
+          "server": "127.0.0.1",
+          "server_port": 20081
+        }
+      }
+    },
+    {
+      "tag": "mixed",
+      "type": "mixed",
+      "listen": "127.0.0.1",
+      "listen_port": 20081,
+      "sniff": true,
+      "sniff_override_destination": true,
+      "domain_strategy": "prefer_ipv4",
+      "users": []
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "HK 01",
+      "type": "shadowsocks",
+      "server": "xxx.xxx.xxx",
+      "server_port": 12345,
+      "method": "aes-128-gcm",
+      "password": "password"
+    },
+    {
+      "tag": "TW 01",
+      "type": "shadowsocks",
+      "server": "xxx.xxx.xxx",
+      "server_port": 12345,
+      "method": "aes-128-gcm",
+      "password": "password"
+    },
+    {
+      "tag": "SG 01",
+      "type": "shadowsocks",
+      "server": "xxx.xxx.xxx",
+      "server_port": 12345,
+      "method": "aes-128-gcm",
+      "password": "password"
+    },
+    {
+      "tag": "JP 01",
+      "type": "shadowsocks",
+      "server": "xxx.xxx.xxx",
+      "server_port": 12345,
+      "method": "aes-128-gcm",
+      "password": "password"
+    },
+    {
+      "tag": "KR 01",
+      "type": "shadowsocks",
+      "server": "xxx.xxx.xxx",
+      "server_port": 12345,
+      "method": "aes-128-gcm",
+      "password": "password"
+    },
+    {
+      "tag": "US 01",
+      "type": "shadowsocks",
+      "server": "xxx.xxx.xxx",
+      "server_port": 12345,
+      "method": "aes-128-gcm",
+      "password": "password"
+    },
+    {
+      "type": "direct",
+      "tag": "DIRECT"
+    },
+    {
+      "type": "dns",
+      "tag": "DNS-OUT"
+    },
+    {
+      "type": "block",
+      "tag": "BLOCK"
+    },
+    {
+      "tag": "Proxy",
+      "type": "selector",
+      "outbounds": [
+        "Auto",
+        "HK 01",
+        "TW 01",
+        "SG 01",
+        "JP 01",
+        "KR 01",
+        "US 01"
+      ],
+      "default": "Auto"
+    },
+    {
+      "tag": "Auto",
+      "type": "selector",
+      "outbounds": [
+        "🇭🇰 Hong Kong",
+        "🇨🇳 Taiwan",
+        "🇸🇬 Singapore",
+        "🇯🇵 Japan",
+        "🇰🇷 Korea",
+        "🇺🇸 United States"
+      ],
+      "default": "🇭🇰 Hong Kong"
+    },
+    {
+      "tag": "Apple",
+      "type": "selector",
+      "outbounds": [
+        "DIRECT",
+        "Auto",
+        "Proxy",
+        "🇭🇰 Hong Kong",
+        "🇨🇳 Taiwan",
+        "🇸🇬 Singapore",
+        "🇯🇵 Japan",
+        "🇰🇷 Korea",
+        "🇺🇸 United States"
+      ],
+      "default": "DIRECT"
+    },
+    {
+      "tag": "Telegram",
+      "type": "selector",
+      "outbounds": [
+        "🇭🇰 Hong Kong"
+      ],
+      "default": "🇭🇰 Hong Kong"
+    },
+    {
+      "tag": "OpenAI",
+      "type": "selector",
+      "outbounds": [
+        "Auto",
+        "Proxy",
+        "🇭🇰 Hong Kong",
+        "🇨🇳 Taiwan",
+        "🇸🇬 Singapore",
+        "🇯🇵 Japan",
+        "🇰🇷 Korea",
+        "🇺🇸 United States"
+      ],
+      "default": "Auto"
+    },
+    {
+      "tag": "Bing",
+      "type": "selector",
+      "outbounds": [
+        "DIRECT",
+        "Auto",
+        "Proxy",
+        "🇭🇰 Hong Kong",
+        "🇨🇳 Taiwan",
+        "🇸🇬 Singapore",
+        "🇯🇵 Japan",
+        "🇰🇷 Korea",
+        "🇺🇸 United States"
+      ],
+      "default": "Auto"
+    },
+    {
+      "tag": "GitHub",
+      "type": "selector",
+      "outbounds": [
+        "DIRECT",
+        "Auto",
+        "Proxy",
+        "🇭🇰 Hong Kong",
+        "🇨🇳 Taiwan",
+        "🇸🇬 Singapore",
+        "🇯🇵 Japan",
+        "🇰🇷 Korea",
+        "🇺🇸 United States"
+      ],
+      "default": "Auto"
+    },
+    {
+      "tag": "Google",
+      "type": "selector",
+      "outbounds": [
+        "🇭🇰 Hong Kong"
+      ],
+      "default": "🇭🇰 Hong Kong"
+    },
+    {
+      "tag": "YouTube",
+      "type": "selector",
+      "outbounds": [
+        "🇭🇰 Hong Kong"
+      ],
+      "default": "🇭🇰 Hong Kong"
+    },
+    {
+      "tag": "Emby",
+      "type": "selector",
+      "outbounds": [
+        "🇭🇰 Hong Kong",
+        "🇨🇳 Taiwan",
+        "🇸🇬 Singapore",
+        "🇯🇵 Japan",
+        "🇰🇷 Korea",
+        "🇺🇸 United States"
+      ],
+      "default": "🇭🇰 Hong Kong"
+    },
+    {
+      "tag": "Twitter",
+      "type": "selector",
+      "outbounds": [
+        "🇭🇰 Hong Kong"
+      ],
+      "default": "🇭🇰 Hong Kong"
+    },
+    {
+      "tag": "TikTok",
+      "type": "selector",
+      "outbounds": [
+        "Auto",
+        "Proxy",
+        "🇭🇰 Hong Kong",
+        "🇨🇳 Taiwan",
+        "🇸🇬 Singapore",
+        "🇯🇵 Japan",
+        "🇰🇷 Korea",
+        "🇺🇸 United States"
+      ],
+      "default": "Auto"
+    },
+    {
+      "tag": "Microsoft",
+      "type": "selector",
+      "outbounds": [
+        "DIRECT",
+        "Auto",
+        "Proxy",
+        "🇭🇰 Hong Kong",
+        "🇨🇳 Taiwan",
+        "🇸🇬 Singapore",
+        "🇯🇵 Japan",
+        "🇰🇷 Korea",
+        "🇺🇸 United States"
+      ],
+      "default": "DIRECT"
+    },
+    {
+      "tag": "Netflix",
+      "type": "selector",
+      "outbounds": [
+        "Auto",
+        "Proxy",
+        "🇭🇰 Hong Kong",
+        "🇨🇳 Taiwan",
+        "🇸🇬 Singapore",
+        "🇯🇵 Japan",
+        "🇰🇷 Korea",
+        "🇺🇸 United States"
+      ],
+      "default": "Auto"
+    },
+    {
+      "tag": "Disney",
+      "type": "selector",
+      "outbounds": [
+        "Auto",
+        "Proxy",
+        "🇭🇰 Hong Kong",
+        "🇨🇳 Taiwan",
+        "🇸🇬 Singapore",
+        "🇯🇵 Japan",
+        "🇰🇷 Korea",
+        "🇺🇸 United States"
+      ],
+      "default": "Auto"
+    },
+    {
+      "tag": "Weibo",
+      "type": "selector",
+      "outbounds": [
+        "DIRECT",
+        "🇭🇰 Hong Kong"
+      ],
+      "default": "DIRECT"
+    },
+    {
+      "tag": "BiliBili",
+      "type": "selector",
+      "outbounds": [
+        "DIRECT",
+        "🇭🇰 Hong Kong"
+      ],
+      "default": "DIRECT"
+    },
+    {
+      "tag": "Steam",
+      "type": "selector",
+      "outbounds": [
+        "DIRECT",
+        "Auto",
+        "Proxy",
+        "🇭🇰 Hong Kong",
+        "🇨🇳 Taiwan",
+        "🇸🇬 Singapore",
+        "🇯🇵 Japan",
+        "🇰🇷 Korea",
+        "🇺🇸 United States"
+      ],
+      "default": "DIRECT"
+    },
+    {
+      "tag": "🇭🇰 Hong Kong",
+      "type": "urltest",
+      "outbounds": [
+        "HK 01"
+      ],
+      "url": "http://cp.cloudflare.com/generate_204",
+      "interval": "1m",
+      "tolerance": 500
+    },
+    {
+      "tag": "🇨🇳 Taiwan",
+      "type": "urltest",
+      "outbounds": [
+        "TW 01"
+      ],
+      "url": "http://cp.cloudflare.com/generate_204",
+      "interval": "1m",
+      "tolerance": 500
+    },
+    {
+      "tag": "🇸🇬 Singapore",
+      "type": "urltest",
+      "outbounds": [
+        "SG 01"
+      ],
+      "url": "http://cp.cloudflare.com/generate_204",
+      "interval": "1m",
+      "tolerance": 500
+    },
+    {
+      "tag": "🇯🇵 Japan",
+      "type": "urltest",
+      "outbounds": [
+        "JP 01"
+      ],
+      "url": "http://cp.cloudflare.com/generate_204",
+      "interval": "1m",
+      "tolerance": 500
+    },
+    {
+      "tag": "🇰🇷 Korea",
+      "type": "urltest",
+      "outbounds": [
+        "KR 01"
+      ],
+      "url": "http://cp.cloudflare.com/generate_204",
+      "interval": "1m",
+      "tolerance": 500
+    },
+    {
+      "tag": "🇺🇸 United States",
+      "type": "urltest",
+      "outbounds": [
+        "US 01"
+      ],
+      "url": "http://cp.cloudflare.com/generate_204",
+      "interval": "1m",
+      "tolerance": 500
+    }
+  ],
+  "route": {
+    "geoip": {
+        "download_url": "https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.db",
+        "download_detour": "DIRECT"
+    },
+    "geosite": {
+        "download_url": "https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.db",
+        "download_detour": "DIRECT"
+    },
+    "rules": [
+      {
+        "protocol": "dns",
+        "outbound": "DNS-OUT"
+      },
+      {
+        "network": "udp",
+        "port": 443,
+        "outbound": "BLOCK"
+      },
+      {
+        "geosite": "category-ads-all",
+        "outbound": "BLOCK"
+      },
+      {
+        "clash_mode": "direct",
+        "outbound": "DIRECT"
+      },
+      {
+        "clash_mode": "global",
+        "outbound": "Auto"
+      },
+      {
+        "domain": [
+          "clash.razord.top",
+          "yacd.metacubex.one",
+          "yacd.haishan.me",
+          "d.metacubex.one"
+        ],
+        "outbound": "DIRECT"
+      },
+      {
+          "geoip": [
+              "apple"
+          ],
+          "geosite": [
+              "apple",
+              "apple-cn"
+          ],
+          "outbound": "Apple"
+      },
+      {
+          "geoip": [
+              "telegram"
+          ],
+          "geosite": [
+              "telegram"
+          ],
+          "outbound": "Telegram"
+      },
+      {
+          "geoip": [
+              "openai"
+          ],
+          "geosite": [
+              "openai"
+          ],
+          "outbound": "OpenAI"
+      },
+      {
+          "geoip": [
+              "bing"
+          ],
+          "geosite": [
+              "bing"
+          ],
+          "outbound": "Bing"
+      },
+      {
+          "geoip": [
+              "github"
+          ],
+          "geosite": [
+              "github"
+          ],
+          "outbound": "GitHub"
+      },
+      {
+          "geoip": [
+              "google"
+          ],
+          "geosite": [
+              "google"
+          ],
+          "outbound": "Google"
+      },
+      {
+          "geoip": [
+              "youtube"
+          ],
+          "geosite": [
+              "youtube"
+          ],
+          "outbound": "YouTube"
+      },
+      {
+          "geoip": [
+              "emby"
+          ],
+          "geosite": [
+              "emby"
+          ],
+          "outbound": "Emby"
+      },
+      {
+          "geoip": [
+              "twitter"
+          ],
+          "geosite": [
+              "twitter"
+          ],
+          "outbound": "Twitter"
+      },
+      {
+          "geoip": [
+              "tiktok"
+          ],
+          "geosite": [
+              "tiktok"
+          ],
+          "outbound": "TikTok"
+      },
+      {
+          "geoip": [
+              "microsoft"
+          ],
+          "geosite": [
+              "microsoft"
+          ],
+          "outbound": "Microsoft"
+      },
+      {
+          "geoip": [
+              "netflix"
+          ],
+          "geosite": [
+              "netflix"
+          ],
+          "outbound": "Netflix"
+      },
+      {
+          "geoip": [
+              "disney"
+          ],
+          "geosite": [
+              "disney"
+          ],
+          "outbound": "Disney"
+      },
+      {
+          "geoip": [
+              "weibo"
+          ],
+          "geosite": [
+              "weibo"
+          ],
+          "outbound": "Weibo"
+      },
+      {
+          "geoip": [
+              "bilibili"
+          ],
+          "geosite": [
+              "bilibili"
+          ],
+          "outbound": "BiliBili"
+      },
+      {
+          "geoip": [
+              "steam"
+          ],
+          "geosite": [
+              "steam"
+          ],
+          "outbound": "Steam"
+      },
+      {
+        "geosite":"geolocation-!cn",
+        "outbound":"Auto"
+      },
+      {
+        "geoip": ["private","cn"],
+        "outbound": "DIRECT"
+      },
+      {
+        "geosite": "cn",
+        "outbound": "DIRECT"
+      }
+    ],
+    "final": "Proxy",
+    "auto_detect_interface": true,
+    "override_android_vpn": true,
+    "default_mark": 233
+  },
+  "experimental": {}
+}
+

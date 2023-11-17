@@ -1,0 +1,542 @@
+#
+# 规则来自blackmatrix7大佬：https://github.com/blackmatrix7/ios_rule_script/tree/master/rule
+#
+# clash 正则
+#   (A).*(B)         节点名既有 A 也有 B 
+#   (A)|(B)          节点名有 A 或者 B   
+#   ^(?!.*A)         节点名不含有 A 
+#   ^(?!.*A).*(B)    节点名不含有 A 但含有 B
+#   ^(?!.*(A|B))     节点名既不含有 A 也不含有 B
+#
+# 特别注意：
+#   1.url 的引号要保留
+#   2.如果订阅下载不下来可以尝试在订阅后面加 &flag=clash
+#
+mixed-port: 7890
+allow-lan: true
+bind-address: '*'
+mode: rule
+log-level: info
+ipv6: false
+profile:
+  store-selected: false
+  tracing: false
+  store-fake-ip: false
+dns:
+  enable: true
+  ipv6: false
+  listen: 0.0.0.0:1053
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  use-hosts: true
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  nameserver:
+    - https://dns.alidns.com/dns-query
+  fake-ip-filter:
+    - '*.lan'
+    - localhost.ptlogin2.qq.com
+    - '+.srv.nintendo.net'
+    - '+.stun.playstation.net'
+    - '+.msftconnecttest.com'
+    - '+.msftncsi.com'
+    - '+.xboxlive.com'
+    - 'msftconnecttest.com'
+    - 'xbox.*.microsoft.com'
+    - '*.battlenet.com.cn'
+    - '*.battlenet.com'
+    - '*.blzstatic.cn'
+    - '*.battle.net'
+
+
+# 远程订阅
+proxy-providers:
+  Airport_Subscription: &Airport
+    type: http
+    url: "https://example.com/api/v1/client/subscribe?token=xxx&flag=clash"
+    interval: 10800
+    path: ./providers/proxy/Airport.yaml
+    health-check:
+      enable: true
+      interval: 600
+      url: https://cp.cloudflare.com/generate_204
+
+  Airport_Filter_All:
+    <<: *Airport
+
+  Airport_Filter_HK:
+    <<: *Airport
+    filter: (?i)香港|🇭🇰|HK|Hong
+
+  Airport_Filter_TW:
+    <<: *Airport
+    filter: (?i)台(湾|灣)|🇹🇼|TW|Taiwan
+
+  Airport_Filter_SG:
+    <<: *Airport
+    filter: (?i)狮|獅|🇸🇬|加坡|SG|Singapore
+
+  Airport_Filter_JP:
+    <<: *Airport
+    filter: (?i)日本|🇯🇵|(东|東)京|JP|Japan
+
+  Airport_Filter_KR:
+    <<: *Airport
+    filter: (?i)韩(国|國)|🇰🇷|KR|Korea
+
+  Airport_Filter_US:
+    <<: *Airport
+    filter: (?i)美(国|國)|🇺🇸|US|States|American
+
+  Airport_Filter_CA:
+    <<: *Airport
+    filter: (?i)加拿大|🇨🇦|CA|Canada
+
+  Airport_Filter_GB:
+    <<: *Airport
+    filter: (?i)英(国|國)|🇬🇧|UK|Britain|Kingdom
+
+
+# 策略分组
+proxy-groups:
+
+  - name: Airport
+    type: select
+    proxies:
+      - Auto
+    use:
+      - Airport_Filter_All
+
+  - name: Auto
+    type: select
+    proxies:
+      - 🇭🇰 Hong Kong
+      - 🇨🇳 Taiwan
+      - 🇸🇬 Singapore
+      - 🇯🇵 Japan
+      - 🇰🇷 Korea
+      - 🇺🇸 United States
+      - 🇨🇦 Canada
+      - 🇬🇧 Great Britain
+
+  - name: Apple
+    type: select
+    proxies:
+      - DIRECT
+      - Airport
+      - 🇭🇰 Hong Kong
+      - 🇨🇳 Taiwan
+      - 🇸🇬 Singapore
+      - 🇯🇵 Japan
+      - 🇰🇷 Korea
+      - 🇺🇸 United States
+      - 🇨🇦 Canada
+      - 🇬🇧 Great Britain
+
+  - name: Telegram
+    type: select
+    proxies:
+      - 🇭🇰 Hong Kong
+
+  - name: OpenAI
+    type: select
+    proxies:
+      - Auto
+      - Airport
+      - 🇭🇰 Hong Kong
+      - 🇨🇳 Taiwan
+      - 🇸🇬 Singapore
+      - 🇯🇵 Japan
+      - 🇺🇸 United States
+      - 🇰🇷 Korea
+      - 🇨🇦 Canada
+      - 🇬🇧 Great Britain
+
+  - name: Bing
+    type: select
+    proxies:
+      - DIRECT
+      - Auto
+      - Airport
+      - 🇭🇰 Hong Kong
+      - 🇨🇳 Taiwan
+      - 🇸🇬 Singapore
+      - 🇯🇵 Japan
+      - 🇰🇷 Korea
+      - 🇺🇸 United States
+      - 🇨🇦 Canada
+      - 🇬🇧 Great Britain
+
+  - name: GitHub
+    type: select
+    proxies:
+      - DIRECT
+      - Auto
+      - Airport
+      - 🇭🇰 Hong Kong
+      - 🇨🇳 Taiwan
+      - 🇸🇬 Singapore
+      - 🇯🇵 Japan
+      - 🇰🇷 Korea
+      - 🇺🇸 United States
+      - 🇨🇦 Canada
+      - 🇬🇧 Great Britain
+
+  - name: Google
+    type: select
+    proxies:
+      - 🇭🇰 Hong Kong
+
+  - name: YouTube
+    type: select
+    proxies:
+      - 🇭🇰 Hong Kong
+
+  - name: Emby
+    type: select
+    proxies:
+      - DIRECT
+      - Auto
+      - Airport
+      - 🇭🇰 Hong Kong
+      - 🇨🇳 Taiwan
+      - 🇸🇬 Singapore
+      - 🇯🇵 Japan
+      - 🇰🇷 Korea
+      - 🇺🇸 United States
+      - 🇨🇦 Canada
+      - 🇬🇧 Great Britain
+
+  - name: Twitter
+    type: select
+    proxies:
+      - 🇭🇰 Hong Kong
+
+  - name: TikTok
+    type: select
+    proxies:
+      - Auto
+      - Airport
+      - 🇭🇰 Hong Kong
+      - 🇨🇳 Taiwan
+      - 🇸🇬 Singapore
+      - 🇯🇵 Japan
+      - 🇰🇷 Korea
+      - 🇺🇸 United States
+      - 🇨🇦 Canada
+      - 🇬🇧 Great Britain
+
+  - name: Microsoft
+    type: select
+    proxies:
+      - DIRECT
+      - Auto
+      - Airport
+      - 🇭🇰 Hong Kong
+      - 🇺🇸 United States
+
+  - name: Netflix
+    type: select
+    proxies:
+      - Auto
+      - Airport
+      - 🇭🇰 Hong Kong
+      - 🇨🇳 Taiwan
+      - 🇸🇬 Singapore
+      - 🇯🇵 Japan
+      - 🇰🇷 Korea
+      - 🇺🇸 United States
+      - 🇨🇦 Canada
+      - 🇬🇧 Great Britain
+
+  - name: Disney
+    type: select
+    proxies:
+      - Auto
+      - Airport
+      - 🇭🇰 Hong Kong
+      - 🇨🇳 Taiwan
+      - 🇸🇬 Singapore
+      - 🇯🇵 Japan
+      - 🇰🇷 Korea
+      - 🇺🇸 United States
+      - 🇨🇦 Canada
+      - 🇬🇧 Great Britain
+
+  - name: Weibo
+    type: select
+    proxies:
+      - DIRECT
+      - 🇭🇰 Hong Kong
+      - 🇨🇳 Taiwan
+
+  - name: BiliBili
+    type: select
+    proxies:
+      - DIRECT
+      - 🇭🇰 Hong Kong
+      - 🇨🇳 Taiwan
+
+  - name: Steam
+    type: select
+    proxies:
+      - DIRECT
+      - Auto
+      - Airport
+      - 🇭🇰 Hong Kong
+      - 🇨🇳 Taiwan
+      - 🇸🇬 Singapore
+      - 🇯🇵 Japan
+      - 🇰🇷 Korea
+      - 🇺🇸 United States
+      - 🇨🇦 Canada
+      - 🇬🇧 Great Britain
+
+  - name: Final
+    type: select
+    proxies:
+      - DIRECT
+      - Auto
+      - Airport
+      - 🇭🇰 Hong Kong
+      - 🇨🇳 Taiwan
+      - 🇸🇬 Singapore
+      - 🇯🇵 Japan
+      - 🇰🇷 Korea
+      - 🇺🇸 United States
+      - 🇨🇦 Canada
+      - 🇬🇧 Great Britain
+
+  # 国家分组聚合
+  - name: 🇭🇰 Hong Kong
+    type: fallback
+    icon: https://cdn.jsdelivr.net/gh/athlonreg/CountriesData/countries_flags/HK.png
+    url: https://cp.cloudflare.com/generate_204
+    interval: 60
+    lazy: true
+    proxies:
+    use:
+      - Airport_Filter_HK
+
+  - name: 🇨🇳 Taiwan
+    type: fallback
+    icon: https://cdn.jsdelivr.net/gh/athlonreg/CountriesData/countries_flags/TW.png
+    url: https://cp.cloudflare.com/generate_204
+    interval: 60
+    lazy: true
+    proxies:
+    use:
+      - Airport_Filter_TW
+
+  - name: 🇸🇬 Singapore
+    type: fallback
+    icon: https://cdn.jsdelivr.net/gh/athlonreg/CountriesData/countries_flags/SG.png
+    url: https://cp.cloudflare.com/generate_204
+    interval: 60
+    lazy: true
+    proxies:
+    use:
+      - Airport_Filter_SG
+
+  - name: 🇯🇵 Japan
+    type: fallback
+    icon: https://cdn.jsdelivr.net/gh/athlonreg/CountriesData/countries_flags/JP.png
+    url: https://cp.cloudflare.com/generate_204
+    interval: 60
+    lazy: true
+    proxies:
+    use:
+      - Airport_Filter_JP
+
+  - name: 🇰🇷 Korea
+    type: fallback
+    icon: https://cdn.jsdelivr.net/gh/athlonreg/CountriesData/countries_flags/KR.png
+    url: https://cp.cloudflare.com/generate_204
+    interval: 60
+    lazy: true
+    proxies:
+    use:
+      - Airport_Filter_KR
+
+  - name: 🇺🇸 United States
+    type: fallback
+    icon: https://cdn.jsdelivr.net/gh/athlonreg/CountriesData/countries_flags/US.png
+    url: https://cp.cloudflare.com/generate_204
+    interval: 60
+    lazy: true
+    proxies:
+    use:
+      - Airport_Filter_US
+
+  - name: 🇨🇦 Canada
+    type: fallback
+    icon: https://cdn.jsdelivr.net/gh/athlonreg/CountriesData/countries_flags/CA.png
+    url: https://cp.cloudflare.com/generate_204
+    interval: 60
+    lazy: true
+    proxies:
+    use:
+      - Airport_Filter_CA
+
+  - name: 🇬🇧 Great Britain
+    type: fallback
+    icon: https://cdn.jsdelivr.net/gh/athlonreg/CountriesData/countries_flags/GB.png
+    url: https://cp.cloudflare.com/generate_204
+    interval: 60
+    lazy: true
+    proxies:
+    use:
+      - Airport_Filter_GB
+
+
+# 远程规则集合
+rule-providers:
+  Lan_rule:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/Lan/Lan.yaml"
+    path: ./RuleSet/Lan.yaml
+    interval: 86400
+
+  China_rule:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/ChinaMax/ChinaMax_Classical.yaml"
+    path: ./RuleSet/ChinaMax_Classical.yaml
+    interval: 86400
+
+  Apple_rule:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/Apple/Apple.yaml"
+    path: ./RuleSet/Apple.yaml
+    interval: 86400
+
+  Telegram_rule:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/Telegram/Telegram.yaml"
+    path: ./RuleSet/Telegram.yaml
+    interval: 86400
+
+  OpenAI_rule:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/OpenAI/OpenAI.yaml"
+    path: ./RuleSet/OpenAI.yaml
+    interval: 86400
+
+  Bing_rule:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/Bing/Bing.yaml"
+    path: ./RuleSet/Bing.yaml
+    interval: 86400
+
+  GitHub_rule:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/GitHub/GitHub.yaml"
+    path: ./RuleSet/GitHub.yaml
+    interval: 86400
+
+  Google_rule:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/Google/Google.yaml"
+    path: ./RuleSet/Google.yaml
+    interval: 86400
+
+  YouTube_rule:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/YouTube/YouTube.yaml"
+    path: ./RuleSet/YouTube.yaml
+    interval: 86400
+
+  Emby_rule:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/Emby/Emby.yaml"
+    path: ./RuleSet/Emby.yaml
+    interval: 86400
+
+  Twitter_rule:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/Twitter/Twitter.yaml"
+    path: ./RuleSet/Twitter.yaml
+    interval: 86400
+
+  TikTok_rule:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/TikTok/TikTok.yaml"
+    path: ./RuleSet/TikTok.yaml
+    interval: 86400
+
+  Microsoft_rule:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/Microsoft/Microsoft.yaml"
+    path: ./RuleSet/Microsoft.yaml
+    interval: 86400
+
+  Netflix_rule:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/Netflix/Netflix.yaml"
+    path: ./RuleSet/Netflix.yaml
+    interval: 86400
+
+  Disney_rule:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/Disney/Disney.yaml"
+    path: ./RuleSet/Disney.yaml
+    interval: 86400
+
+  BiliBili_rule:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/BiliBili/BiliBili.yaml"
+    path: ./RuleSet/BiliBili.yaml
+    interval: 86400
+
+  Weibo_rule:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/Weibo/Weibo.yaml"
+    path: ./RuleSet/Weibo.yaml
+    interval: 86400
+
+  Steam_rule:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script/rule/Clash/Steam/Steam.yaml"
+    path: ./RuleSet/Steam.yaml
+    interval: 86400
+
+
+rules:
+  - RULE-SET,Apple_rule,Apple
+  - RULE-SET,Telegram_rule,Telegram 
+  - RULE-SET,OpenAI_rule,OpenAI
+  - RULE-SET,Bing_rule,Bing
+  - RULE-SET,GitHub_rule,GitHub
+  - RULE-SET,Google_rule,Google
+  - RULE-SET,YouTube_rule,YouTube
+  - RULE-SET,Emby_rule,Emby
+  - RULE-SET,Twitter_rule,Twitter
+  - RULE-SET,TikTok_rule,TikTok
+  - RULE-SET,Microsoft_rule,Microsoft
+  - RULE-SET,Netflix_rule,Netflix
+  - RULE-SET,Disney_rule,Disney
+  - RULE-SET,Weibo_rule,Weibo
+  - RULE-SET,BiliBili_rule,BiliBili
+  - RULE-SET,Steam_rule,Steam
+  - RULE-SET,Lan_rule,DIRECT
+  - RULE-SET,China_rule,DIRECT,no-resolve
+  - GEOIP,CN,DIRECT
+  - MATCH,Final
