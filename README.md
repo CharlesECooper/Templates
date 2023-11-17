@@ -1,14 +1,25 @@
 # Templates
 
-## Tools
+## Description
+
+https://charlesecooper.github.io/Templates/
+
+## Downloads
 
 - Surge
+  - https://charlesecooper.github.io/Templates/Surge.conf
 - Stash
+  - https://charlesecooper.github.io/Templates/Stash.yaml
 - QuantumultX
+  - https://charlesecooper.github.io/Templates/QuantumultX.conf
 - Loon
+  - https://charlesecooper.github.io/Templates/Loon.conf
 - Shadowrocket
+  - https://charlesecooper.github.io/Templates/Shadowrocket.conf
 - Surfboard
+  - https://charlesecooper.github.io/Templates/Surfboard.conf
 - Sing-Box
+  - https://charlesecooper.github.io/Templates/Sing-Box.json
 
 ## Features
 
