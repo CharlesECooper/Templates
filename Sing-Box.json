@@ -227,7 +227,10 @@
       "tag": "Telegram",
       "type": "selector",
       "outbounds": [
-        "🇭🇰 Hong Kong"
+        "🇭🇰 Hong Kong",
+        "🇸🇬 Singapore",
+        "🇯🇵 Japan",
+        "🇺🇸 United States"
       ],
       "default": "🇭🇰 Hong Kong"
     },
@@ -416,7 +419,7 @@
       "outbounds": [
         "HK 01"
       ],
-      "url": "http://cp.cloudflare.com/generate_204",
+      "url": "http://www.gstatic.com/generate_204",
       "interval": "1m",
       "tolerance": 500
     },
@@ -426,7 +429,7 @@
       "outbounds": [
         "TW 01"
       ],
-      "url": "http://cp.cloudflare.com/generate_204",
+      "url": "http://www.gstatic.com/generate_204",
       "interval": "1m",
       "tolerance": 500
     },
@@ -436,7 +439,7 @@
       "outbounds": [
         "SG 01"
       ],
-      "url": "http://cp.cloudflare.com/generate_204",
+      "url": "http://www.gstatic.com/generate_204",
       "interval": "1m",
       "tolerance": 500
     },
@@ -446,7 +449,7 @@
       "outbounds": [
         "JP 01"
       ],
-      "url": "http://cp.cloudflare.com/generate_204",
+      "url": "http://www.gstatic.com/generate_204",
       "interval": "1m",
       "tolerance": 500
     },
@@ -456,7 +459,7 @@
       "outbounds": [
         "KR 01"
       ],
-      "url": "http://cp.cloudflare.com/generate_204",
+      "url": "http://www.gstatic.com/generate_204",
       "interval": "1m",
       "tolerance": 500
     },
@@ -466,7 +469,7 @@
       "outbounds": [
         "US 01"
       ],
-      "url": "http://cp.cloudflare.com/generate_204",
+      "url": "http://www.gstatic.com/generate_204",
       "interval": "1m",
       "tolerance": 500
     }
